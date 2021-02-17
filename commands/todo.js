@@ -33,7 +33,7 @@ module.exports = {
             todo_embed.setTitle(`${message.author.username}'s Complete Tasks:`); 
             if (complete.length == 0) {
                 todo_embed.addField(
-                    `No complete tasks found for ${message.author.username}`, "Use `~todo complete <task id>` to add tasks to your to-do list.", false
+                    `No complete tasks found for ${message.author.username}`, "Use `~todo complete <task>` to add tasks to your to-do list.", false
                 );
                 return message.channel.send(todo_embed);
             }
@@ -71,7 +71,7 @@ module.exports = {
                 return message.channel.send(`Task \`${deletedTask}\` successfully marked as completed!`);
             }
             return message.channel.send(`No task called ${taskToDelete} was found.`);
-            
+
         } else if (command_name == "incomplete") {
             let taskToIncomplete = args.slice(1, args.length).join(" ");
             let incompleteTask;
