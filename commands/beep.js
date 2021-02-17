@@ -1,6 +1,6 @@
 module.exports = {
     name: 'beep',
-    description: 'Beep!',
+    description: 'responds with \'Boop!\' whenever `~beep` is typed',
     args: false,
     displayHelp: false,
     execute(message, args) {

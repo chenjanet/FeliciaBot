@@ -22,6 +22,8 @@ module.exports = {
                 for (let i = 0; i < definitions[defn].shortdef.length; i++) {
                     curr_defn = `${curr_defn}- ${definitions[defn].shortdef[i]}\n`;
                 }
+                // note to self: find way to add a pagination feature for things with many different definitions
+                // like those arrow reactions
                 dictionary_embed.addField(
                     curr_term, curr_defn, false 
                 );

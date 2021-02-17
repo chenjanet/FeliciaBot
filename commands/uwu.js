@@ -1,6 +1,6 @@
 module.exports = {
     name: 'uwu',
-    description: 'uwu',
+    description: 'responds with \'owo\' whenever `~uwu` is typed',
     args: false,
     displayHelp: false,
     execute(message, args) {

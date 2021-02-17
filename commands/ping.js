@@ -1,6 +1,6 @@
 module.exports = {
     name: 'ping',
-    description: 'Ping!',
+    description: 'responds with \'Pong!\' whenever `~ping` is typed',
     args: false,
     displayHelp: false,
     execute(message, args) {
