@@ -13,10 +13,20 @@ module.exports = {
             return message.channel.send("Error: command must include a singular word");
         }
         const word = args[0];
-        const definition = await apis.getRequest(process.env.DICTIONARY_URL + word + "?key=" + process.env.DICTIONARY_APIKEY, function(result) {
-            return result;
+        await apis.getRequest(process.env.DICTIONARY_URL + word + "?key=" + process.env.DICTIONARY_APIKEY, function(result) {
+            const definitions = result.body;
+            dictionary_embed.setTitle(`Definition(s) found for ${word}`)
+            for (let defn in definitions) {
+                let curr_defn = "";
+                let curr_term = `${definitions[defn].hwi.hw} (${definitions[defn].fl})`;
+                for (let i = 0; i < definitions[defn].shortdef.length; i++) {
+                    curr_defn = `${curr_defn}- ${definitions[defn].shortdef[i]}\n`;
+                }
+                dictionary_embed.addField(
+                    curr_term, curr_defn, false 
+                );
+            }
+            return message.channel.send(dictionary_embed);
         });
-
-        console.log("DEFINITION IS:", definition);
     }
 }
