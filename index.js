@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 require('dotenv').config();
 
 const client = new Discord.Client();
-const { prefix } = require('./config.json');
+const prefix = '~';
 
 const mongo = require('./mongo.js');
 
