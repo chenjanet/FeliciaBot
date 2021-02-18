@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const todolist = require('./todolist.js')
+const todolist = require('../helpers/todolist.js')
 
 module.exports = {
     name: 'todo',

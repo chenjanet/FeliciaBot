@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
-const apis = require('./apis.js');
+const apis = require('../helpers/apis.js');
 
 module.exports = {
     name: 'dictionary',
-    description: 'Translates a phrase from one language to another',
+    description: 'Returns definition(s) of a given English word, courtesy of Merriam-Webster Dictionary API',
     args: true,
     displayHelp: true,
     usage: '<word>',
@@ -18,15 +18,16 @@ module.exports = {
             dictionary_embed.setTitle(`Definition(s) found for ${word}`)
             for (let defn in definitions) {
                 let curr_defn = "";
-                let curr_term = `${definitions[defn].hwi.hw} (${definitions[defn].fl})`;
+                let curr_term = `__${definitions[defn].hwi.hw} (${definitions[defn].fl})__`;
                 for (let i = 0; i < definitions[defn].shortdef.length; i++) {
-                    curr_defn = `${curr_defn}- ${definitions[defn].shortdef[i]}\n`;
+                    curr_defn = `${curr_defn}   • ${definitions[defn].shortdef[i]}\n`;
                 }
-                // note to self: find way to add a pagination feature for things with many different definitions
-                // like those arrow reactions
-                dictionary_embed.addField(
-                    curr_term, curr_defn, false 
-                );
+                if (curr_defn.length > 0 && curr_term.length > 0) {
+                    dictionary_embed.addField(
+                        curr_term, curr_defn, false 
+                    );
+                }
+                
             }
             return message.channel.send(dictionary_embed);
         });
