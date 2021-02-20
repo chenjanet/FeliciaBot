@@ -14,20 +14,36 @@ module.exports = {
         }
         const phrase = encodeURIComponent(args.join(" "));
         console.log(phrase);
-        request.get(process.env.WIKI_URL + "&titles=" + phrase, { json: true }, (err, res, body) => {
+        request.get(process.env.WIKI_SEARCH_URL + "&search=" + phrase, { json: true }, (err, res, body) => {
             if (err) {
                 return console.log(err);
             }
             wiki_embed.setTitle(`Wikipedia search results for ${phrase}`);
-            console.log(res.statusCode);
-            const results = body.query.pages;
-            console.log(results);
-            for (let key in results) {
-                wiki_embed.addField(
-                    results[key].title, results[key].extract, false
-                );
+            console.log(body);
+            if (body[1]?.length == 0) {
+                return message.channel.send(`No Wikipedia results found for ${phrase}`);
             }
-            return message.channel.send(wiki_embed);
+            const result = body[1];
+            const url = body[3];
+            request.get(process.env.WIKI_GET_URL + "&titles=" + result, { json: true }, (err, res, body) => {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log(body.query.pages);
+                const results = body.query.pages;
+                if (Object.keys(results).length == 0) {
+                    return message.channel.send(`No Wikipedia results found for ${phrase}`);
+                }
+                for (let key in results) {
+                    if (results[key].extract.length > 0) {
+                        wiki_embed.addField(
+                            results[key].title, results[key].extract, false
+                        );
+                    }
+                }
+                wiki_embed.setFooter(`Learn more at ${url}`);
+                return message.channel.send(wiki_embed);
+            });
         });
     }
 }
