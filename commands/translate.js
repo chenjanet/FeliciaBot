@@ -10,7 +10,7 @@ const languageTranslator = new LanguageTranslatorV3({
     authenticator: new IamAuthenticator({
         apikey: process.env.LANGUAGE_TRANSLATOR_APIKEY
     }),
-    serviceUrl: process.env.TRANSLATOR_URL
+    serviceUrl: process.env.LANGUAGE_TRANSLATOR_URL
 });
 
 module.exports = {
