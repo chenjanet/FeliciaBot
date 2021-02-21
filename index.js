@@ -1,5 +1,4 @@
 /* TO-DO: 
-    - wikipedia api
     - heroku hosting?
     - pagination for longer commands (todo, dictionary, thesaurus) via emoji arrow reacts
 */
