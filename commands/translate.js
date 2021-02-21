@@ -8,9 +8,9 @@ const {IamAuthenticator } = require('ibm-watson/auth');
 const languageTranslator = new LanguageTranslatorV3({
     version: '2018-05-01',
     authenticator: new IamAuthenticator({
-        apikey: process.env.LANGUAGE_TRANSLATOR_APIKEY
+        apikey: process.env.TRANSLATOR_APIKEY
     }),
-    serviceUrl: process.env.LANGUAGE_TRANSLATOR_URL
+    serviceUrl: process.env.TRANSLATOR_URL
 });
 
 module.exports = {
