@@ -37,7 +37,6 @@ module.exports = {
         };
         const result = await languageTranslator.translate(translatorParams)
             .then(translationResult => {
-                console.log(JSON.stringify(translationResult, null, 2));
                 return translationResult.result.translations[0].translation;
             })
             .catch(err => {
