@@ -18,10 +18,8 @@ module.exports = {
             let todo_embed = new Discord.MessageEmbed().setColor('#0099ff');
             let embeds = [];
             let current_embed = 0;
-            let counter = 2;
-            let tasks;
+            let counter = 5;
             if (!args[0]?.length || args[0] == "incomplete") {
-                tasks = incomplete.length;
                 todo_embed.setTitle(`${message.author.username}'s To-Do List:`); 
                 if (incomplete.length == 0) {
                     todo_embed.addField(
@@ -30,10 +28,10 @@ module.exports = {
                     return message.channel.send(todo_embed);
                 }
                 for (let task of incomplete) {
-                    if (counter == 0) {
+                    if (counter === 0) {
                         embeds.push(todo_embed);
                         todo_embed = new Discord.MessageEmbed().setColor('#0099ff').setTitle(`${message.author.username}'s To-Do List:`);
-                        counter = 2;
+                        counter = 5;
                     }
                     todo_embed.addFields(
                         { name: `${task}`, value: `Type \`~todo complete ${task}\` to mark this task as done.`, inline: false }
@@ -41,7 +39,6 @@ module.exports = {
                     counter--;
                 }
             } else if (args[0] == "complete") {
-                tasks = complete.length;
                 todo_embed.setTitle(`${message.author.username}'s Complete Tasks:`); 
                 if (complete.length == 0) {
                     todo_embed.addField(
@@ -53,7 +50,7 @@ module.exports = {
                     if (counter == 0) {
                         embeds.push(todo_embed);
                         todo_embed = new Discord.MessageEmbed().setColor('#0099ff').setTitle(`${message.author.username}'s Complete Tasks:`);
-                        counter = 2;
+                        counter = 5;
                     }
                     todo_embed.addFields(
                         { name: `${task}`, value: `Type \`~todo incomplete ${task}\` to mark this task as incomplete.`, inline: false }
