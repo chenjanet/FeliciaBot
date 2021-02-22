@@ -1,9 +1,10 @@
 const Discord = require('discord.js');
 const apis = require('../helpers/apis.js');
+const langs = require('../language-codes.json');
 
 module.exports = {
     name: 'dictionary',
-    description: 'Returns definition(s) of a given English word, courtesy of Merriam-Webster Dictionary API',
+    description: `Returns definition(s) of a given English word, courtesy of Merriam-Webster Dictionary API. Currently-supported languages: ${Object.keys(langs).join(", ")}`,
     args: true,
     displayHelp: true,
     usage: '<word>',

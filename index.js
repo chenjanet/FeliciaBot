@@ -1,7 +1,5 @@
 /* TO-DO: 
-    - issue with thesaurus results sometimes being longer than 1024 chars
     - add list of supported languages to help page for translator
-    - pagination for longer commands (todo, dictionary, thesaurus) via emoji arrow reacts
 */
 
 const fs = require('fs');
