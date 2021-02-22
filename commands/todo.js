@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const client = new Discord.Client();
 const todolist = require('../helpers/todolist.js')
 
 module.exports = {
@@ -9,40 +10,94 @@ module.exports = {
     usage: '[one of add/complete/incomplete] <item to be added/removed from to-do list>',
     async execute(message, args) {
         const userId = message.author.id;
-        const todo_embed = new Discord.MessageEmbed().setColor('#0099ff');
         const todo_info = await todolist.getTodolist(userId);
         let incomplete = todo_info.incompleteList;
         let complete = todo_info.completeList;
 
-        if (!args[0]?.length || (args[0] == "incomplete" && args.length == 1)) {
-            todo_embed.setTitle(`${message.author.username}'s To-Do List:`); 
-            if (incomplete.length == 0) {
-                todo_embed.addField(
-                    `No tasks found for ${message.author.username}`, "Use `~todo add <task>` to add tasks to your to-do list.", false
-                );
-                return message.channel.send(todo_embed);
+        if (args.length == 1) {
+            let todo_embed = new Discord.MessageEmbed().setColor('#0099ff');
+            let embeds = [];
+            let current_embed = 0;
+            let counter = 2;
+            let tasks;
+            if (!args[0]?.length || args[0] == "incomplete") {
+                tasks = incomplete.length;
+                todo_embed.setTitle(`${message.author.username}'s To-Do List:`); 
+                if (incomplete.length == 0) {
+                    todo_embed.addField(
+                        `No tasks found for ${message.author.username}`, "Use `~todo add <task>` to add tasks to your to-do list.", false
+                    );
+                    return message.channel.send(todo_embed);
+                }
+                for (let task of incomplete) {
+                    if (counter == 0) {
+                        embeds.push(todo_embed);
+                        todo_embed = new Discord.MessageEmbed().setColor('#0099ff').setTitle(`${message.author.username}'s To-Do List:`);
+                        counter = 2;
+                    }
+                    todo_embed.addFields(
+                        { name: `${task}`, value: `Type \`~todo complete ${task}\` to mark this task as done.`, inline: false }
+                    );
+                    counter--;
+                }
+            } else if (args[0] == "complete") {
+                tasks = complete.length;
+                todo_embed.setTitle(`${message.author.username}'s Complete Tasks:`); 
+                if (complete.length == 0) {
+                    todo_embed.addField(
+                        `No complete tasks found for ${message.author.username}`, "Use `~todo complete <task>` to add tasks to your to-do list.", false
+                    );
+                    return message.channel.send(todo_embed);
+                }
+                for (let task of complete) {
+                    if (counter == 0) {
+                        embeds.push(todo_embed);
+                        todo_embed = new Discord.MessageEmbed().setColor('#0099ff').setTitle(`${message.author.username}'s Complete Tasks:`);
+                        counter = 2;
+                    }
+                    todo_embed.addFields(
+                        { name: `${task}`, value: `Type \`~todo incomplete ${task}\` to mark this task as incomplete.`, inline: false }
+                    );
+                    counter--;
+                }
             }
-            for (let task of incomplete) {
-                todo_embed.addFields(
-                    { name: `${task}`, value: `Type \`~todo complete ${task}\` to mark this task as done.`, inline: false }
-                );
-            }
-            return message.channel.send(todo_embed);
+            embeds.push(todo_embed);
+            const filter = (reaction, user) => {
+                return ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id;
+            };
 
-        } else if (args[0] == "complete" && args.length == 1) {
-            todo_embed.setTitle(`${message.author.username}'s Complete Tasks:`); 
-            if (complete.length == 0) {
-                todo_embed.addField(
-                    `No complete tasks found for ${message.author.username}`, "Use `~todo complete <task>` to add tasks to your to-do list.", false
-                );
-                return message.channel.send(todo_embed);
-            }
-            for (let task of complete) {
-                todo_embed.addFields(
-                    { name: `${task}`, value: `Type \`~todo incomplete ${task}\` to mark this task as incomplete.`, inline: false }
-                );
-            }
-            return message.channel.send(todo_embed);
+            message.channel.send(embeds[0]).then(msg => {
+                if (embeds.length > 1) {
+                    msg.react('➡️');
+                }
+                const collector = msg.createReactionCollector(filter, { time: 300000 });
+                collector.on('collect', reaction => {
+                    msg.reactions.removeAll().then(async () => {
+                        if (reaction.emoji.name === '➡️') {
+                            current_embed += 1;
+                        } else {
+                            current_embed -= 1;
+                        }
+                        if (current_embed <= 0) {
+                            current_embed = 0;
+                        } else if (current_embed >= embeds.length) {
+                            current_embed -= 1;
+                        }
+
+                        msg.edit(embeds[current_embed]);
+                       if (current_embed !== 0) {
+                            await msg.react('⬅️');
+                        }
+                        if (current_embed < embeds.length - 1) {
+                            await msg.react('➡️');
+                        }
+                    });
+                })
+                collector.on('end', () => {
+                    msg.reactions.removeAll();
+                });
+            });
+            return;
         }
 
         const command_name = args[0].split(/\s/)[0].toLowerCase();
