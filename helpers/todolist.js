@@ -7,11 +7,9 @@ module.exports.getTodolist = async (userId) => {
             const result = await todolistSchema.findOne({ userId });
             let incomplete = [];
             let complete = [];
-            let lastTaskId = -1;
             if (result) {
                 incomplete = result.incompleteTasks;
                 complete = result.completeTasks;
-                lastTaskId = result.lastTaskId;
             } else {
                 await new todolistSchema({
                     userId,
@@ -21,8 +19,7 @@ module.exports.getTodolist = async (userId) => {
             }
             return {
                 "completeList": complete,
-                "incompleteList": incomplete,
-                "lastId": lastTaskId
+                "incompleteList": incomplete
             };
         } finally {
             mongoose.connection.close();

@@ -1,11 +1,21 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-module.exports = async () => {
+let _db;
+
+async function connectDB() {
     await mongoose.connect(process.env.DB_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false
     });
-    return mongoose
+    //console.log(mongoose.connections[0].db);
+    _db = mongoose.connections[0].db;
+    return mongoose;
 }
+
+function getDB() {
+    return _db;
+}
+
+module.exports = { connectDB, getDB };

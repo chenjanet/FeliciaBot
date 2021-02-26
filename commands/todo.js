@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
-const todolist = require('../helpers/todolist.js')
+const todolistSchema = require('../schemas/todolist-schema');
+const mongo = require('../mongo.js');
 
 module.exports = {
     name: 'todo',
@@ -8,11 +9,21 @@ module.exports = {
     usage: '[one of add/complete/incomplete] <item to be added/removed from to-do list>',
     async execute(message, args) {
         const userId = message.author.id;
-        const todo_info = await todolist.getTodolist(userId);
-        let incomplete = todo_info.incompleteList;
-        let complete = todo_info.completeList;
+        todo_info = await mongo.getDB().collection("todolists").findOne({ userId });
+        let incomplete = [];
+        let complete = [];
+        if (todo_info) {
+            incomplete = todo_info.incompleteTasks;
+            complete = todo_info.completeTasks;
+        } else {
+            await new todolistSchema({
+                userId,
+                complete,
+                incomplete
+            }).save();
+        }
 
-        if (args.length == 1) {
+        if (args.length <= 1) {
             let todo_embed = new Discord.MessageEmbed().setColor('#0099ff');
             let embeds = [];
             let current_embed = 0;
@@ -94,7 +105,7 @@ module.exports = {
             });
             return;
         }
-
+        console.log(args);
         const command_name = args[0].split(/\s/)[0].toLowerCase();
 
         if (command_name != "add" && command_name != "complete" && command_name != "incomplete") {
@@ -103,7 +114,7 @@ module.exports = {
         } else if (command_name == "add") {
             let new_task = args.slice(1, args.length).join(" ");
             incomplete.push(new_task);
-            await todolist.updateTodolist(userId, incomplete, complete);
+            await mongo.getDB().collection("todolists").findOneAndUpdate({ userId: userId }, { incompleteTasks: incomplete, completeTasks: complete });
             return message.channel.send(`Task ${new_task} successfully added! Type \`~todo\` to view all current tasks.`);
 
         } else if (command_name == "complete") {
@@ -117,7 +128,7 @@ module.exports = {
             }
             if (typeof deletedTask != "undefined") {
                 complete.push(deletedTask);
-                await todolist.updateTodolist(userId, incomplete, complete);
+                await mongo.getDB().collection("todolists").findOneAndUpdate({ userId: userId }, { incompleteTasks: incomplete, completeTasks: complete });
                 return message.channel.send(`Task \`${deletedTask}\` successfully marked as completed!`);
             }
             return message.channel.send(`No task called ${taskToDelete} was found.`);
@@ -133,7 +144,7 @@ module.exports = {
             }
             if (typeof incompleteTask != "undefined") {
                 incomplete.push(incompleteTask);
-                await todolist.updateTodolist(userId, incomplete, complete);
+                await mongo.getDB().collection("todolists").findOneAndUpdate({ userId: userId }, { incompleteTasks: incomplete, completeTasks: complete });
                 return message.channel.send(`Task \`${incompleteTask}\` successfully marked as incomplete!`)
             }
             return message.channel.send(`No task called ${taskToIncomplete} was found.`);

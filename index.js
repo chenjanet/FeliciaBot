@@ -24,12 +24,13 @@ for (const file of commandFiles) {
 
 client.once('ready', async () => {
     client.user.setActivity("~help");
-    await mongo().then(mongoose => {
+    const dbConnection = await mongo.connectDB();
+    /*await mongo.connectDB().then(mongoose => {
         try {
         } finally {
             mongoose.connection.close();
         }
-    });
+    });*/
 });
 
 client.on('message', message => {
