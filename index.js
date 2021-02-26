@@ -1,7 +1,6 @@
 /* TO-DO: 
     - some parts of code are repetitive - can be modularized (?)
     - arrow reacts don't work in DMs - don't react there?
-    - persist mongo connection instead of opening/reopening
 */
 
 const fs = require('fs');
