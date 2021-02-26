@@ -17,6 +17,7 @@
         "heroku": "^7.47.13",
         "ibm-watson": "^6.0.2",
         "mongoose": "^5.11.14",
+        "node-notifier": "^8.0.1",
         "request": "^2.88.2",
         "turndown": "^7.0.0"
     }
