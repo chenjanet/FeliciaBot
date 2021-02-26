@@ -6,7 +6,6 @@ module.exports = {
     name: 'dictionary',
     description: `Returns definition(s) of a given English word, courtesy of Merriam-Webster Dictionary API. Currently-supported languages: ${Object.keys(langs).join(", ")}`,
     args: true,
-    displayHelp: true,
     usage: '<word>',
     async execute(message, args) {
         let dictionary_embed = new Discord.MessageEmbed().setColor('#0099ff');

@@ -1,12 +1,10 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
 const todolist = require('../helpers/todolist.js')
 
 module.exports = {
     name: 'todo',
     description: 'Lists all to-do list items, or adds to-do list items/marks items as complete',
     args: false,
-    displayHelp: true,
     usage: '[one of add/complete/incomplete] <item to be added/removed from to-do list>',
     async execute(message, args) {
         const userId = message.author.id;

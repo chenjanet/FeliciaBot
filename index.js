@@ -1,5 +1,7 @@
 /* TO-DO: 
-    - add list of supported languages to help page for translator
+    - some parts of code are repetitive - can be modularized (?)
+    - arrow reacts don't work in DMs - don't react there?
+    - persist mongo connection instead of opening/reopening
 */
 
 const fs = require('fs');
@@ -21,11 +23,9 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', async () => {
-    console.log(`Logged in as ${client.user.tag}`);
     client.user.setActivity("~help");
     await mongo().then(mongoose => {
         try {
-            console.log('Connected to mongo');
         } finally {
             mongoose.connection.close();
         }

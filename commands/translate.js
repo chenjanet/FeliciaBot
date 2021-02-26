@@ -17,7 +17,6 @@ module.exports = {
     name: 'translate',
     description: 'Translates a phrase from one language to another',
     args: true,
-    displayHelp: true,
     usage: '<original language> <target language> <phrase>',
     async execute(message, args) {
         const translation_embed = new Discord.MessageEmbed().setColor('#0099ff');

@@ -5,7 +5,6 @@ module.exports = {
     name: 'thesaurus',
     description: 'Returns synonym(s) and antonym(s) of a given English word, courtesy of Merriam-Webster Thesaurus API',
     args: true,
-    displayHelp: true,
     usage: '<word>',
     async execute(message, args) {
         let thesaurus_embed = new Discord.MessageEmbed().setColor('#0099ff');
