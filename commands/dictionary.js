@@ -13,7 +13,7 @@ module.exports = {
             return message.channel.send("Error: command must include a singular word");
         }
         const word = args[0];
-        await apis.getRequest(process.env.DICTIONARY_URL + word + "?key=" + process.env.DICTIONARY_APIKEY, function(result) {
+        await apis.getRequest(process.env.DICTIONARY_URL + word + "?key=" + process.env.DICTIONARY_APIKEY, "res", function(result) {
             const definitions = result.body;
             dictionary_embed.setTitle(`Definition(s) found for ${word}`);
             let counter = 5;

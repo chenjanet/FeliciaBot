@@ -12,7 +12,7 @@ module.exports = {
             return message.channel.send("Error: command must include a singular word");
         }
         const word = args[0];
-        await apis.getRequest(process.env.THESAURUS_URL + word + "?key=" + process.env.THESAURUS_APIKEY, function(result) {
+        await apis.getRequest(process.env.THESAURUS_URL + word + "?key=" + process.env.THESAURUS_APIKEY, "res", function(result) {
             const synonyms = result.body;
             thesaurus_embed.setTitle(`Synonym(s) found for ${word}`);
             let counter = 5;

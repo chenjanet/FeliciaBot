@@ -9,7 +9,6 @@ async function connectDB() {
         useUnifiedTopology: true,
         useFindAndModify: false
     });
-    //console.log(mongoose.connections[0].db);
     _db = mongoose.connections[0].db;
     return mongoose;
 }

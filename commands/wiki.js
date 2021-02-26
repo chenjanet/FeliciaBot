@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const request = require('request');
+const apis = require('../helpers/apis.js');
 
 module.exports = {
     name: 'wiki',
@@ -12,21 +13,15 @@ module.exports = {
             return message.channel.send("Error: search query must be non-empty");
         }
         const phrase = encodeURIComponent(args.join(" "));
-        request.get(process.env.WIKI_SEARCH_URL + "&search=" + phrase, { json: true }, (err, res, body) => {
-            if (err) {
-                return console.log(err);
-            }
+        await apis.getRequest(process.env.WIKI_SEARCH_URL + "&search=" + phrase, "body", async function(result) {
             wiki_embed.setTitle(`Wikipedia search results for ${phrase}`);
-            if (body[1]?.length == 0) {
+            if (result[1]?.length == 0) {
                 return message.channel.send(`No Wikipedia results found for ${phrase}`);
             }
-            const result = body[1];
-            const url = body[3];
-            request.get(process.env.WIKI_GET_URL + "&titles=" + result, { json: true }, (err, res, body) => {
-                if (err) {
-                    return console.log(err);
-                }
-                const results = body.query.pages;
+            const page_title = result[1];
+            const url = result[3];
+            await apis.getRequest(process.env.WIKI_GET_URL + "&titles=" + page_title, "body", function(result) {
+                const results = result.query.pages;
                 if (Object.keys(results).length == 0) {
                     return message.channel.send(`No Wikipedia results found for ${phrase}`);
                 }
@@ -40,6 +35,9 @@ module.exports = {
                 wiki_embed.setFooter(`Learn more at ${url}`);
                 return message.channel.send(wiki_embed);
             });
+        });
+        request.get(process.env.WIKI_SEARCH_URL + "&search=" + phrase, { json: true }, (err, res, body) => {
+            
         });
     }
 }
