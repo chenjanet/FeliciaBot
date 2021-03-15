@@ -15,10 +15,21 @@ module.exports = {
         const word = args[0];
         await apis.getRequest(process.env.DICTIONARY_URL + word + "?key=" + process.env.DICTIONARY_APIKEY, "res", function(result) {
             const definitions = result.body;
-            dictionary_embed.setTitle(`Definition(s) found for ${word}`);
+            if (typeof definitions[0].hw == "undefined") {
+                let suggestions = "";
+                dictionary_embed.setTitle(`No definition(s) found for ${word}`);
+                for (let defn in definitions) {
+                    suggestions = `${suggestions}, ${definitions[defn]}`;
+                }
+                dictionary_embed.addField(
+                    "Try searching again using one of these terms:", suggestions.substring(1, suggestions.length), false
+                );
+                return message.channel.send(dictionary_embed);
+            }
             let counter = 5;
             let embeds = [];
             let current_embed = 0;
+            dictionary_embed.setTitle(`Definition(s) found for ${word}`);
             for (let defn in definitions) {
                 let curr_defn = "";
                 let curr_term = `${definitions[defn].hwi.hw} (${definitions[defn].fl})`;
@@ -36,7 +47,6 @@ module.exports = {
                     );
                     counter--;
                 }
-                
             }
             embeds.push(dictionary_embed);
             const filter = (reaction, user) => {
