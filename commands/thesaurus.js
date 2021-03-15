@@ -14,6 +14,17 @@ module.exports = {
         const word = args[0];
         await apis.getRequest(process.env.THESAURUS_URL + word + "?key=" + process.env.THESAURUS_APIKEY, "res", function(result) {
             const synonyms = result.body;
+            if (typeof synonyms[0].hwi == "undefined") {
+                let suggestions = "";
+                thesaurus_embed.setTitle(`No result(s) found for ${word}`);
+                for (let result in synonyms) {
+                    suggestions = `${suggestions}, ${synonyms[result]}`;
+                }
+                thesaurus_embed.addField(
+                    "Try searching again using one of these terms:", suggestions.substring(1, suggestions.length), false
+                );
+                return message.channel.send(thesaurus_embed);
+            }
             thesaurus_embed.setTitle(`Synonym(s) found for ${word}`);
             let counter = 5;
             let embeds = [];

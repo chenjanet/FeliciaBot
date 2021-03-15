@@ -15,7 +15,7 @@ module.exports = {
         const word = args[0];
         await apis.getRequest(process.env.DICTIONARY_URL + word + "?key=" + process.env.DICTIONARY_APIKEY, "res", function(result) {
             const definitions = result.body;
-            if (typeof definitions[0].hw == "undefined") {
+            if (typeof definitions[0].hwi == "undefined") {
                 let suggestions = "";
                 dictionary_embed.setTitle(`No definition(s) found for ${word}`);
                 for (let defn in definitions) {
