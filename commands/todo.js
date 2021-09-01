@@ -127,7 +127,7 @@ module.exports = {
             }
             if (typeof deletedTask != "undefined") {
                 complete.push(deletedTask);
-                await mongo.getDB().collection("todolists").findOneAndUpdate({ userId: userId }, { incompleteTasks: incomplete, completeTasks: complete });
+                await mongo.getDB().collection("todolists").findOneAndUpdate({ userId: userId }, { $set: { incompleteTasks: incomplete, completeTasks: complete } });
                 return message.channel.send(`Task \`${deletedTask}\` successfully marked as completed!`);
             }
             return message.channel.send(`No task called ${taskToDelete} was found.`);
@@ -143,7 +143,7 @@ module.exports = {
             }
             if (typeof incompleteTask != "undefined") {
                 incomplete.push(incompleteTask);
-                await mongo.getDB().collection("todolists").findOneAndUpdate({ userId: userId }, { incompleteTasks: incomplete, completeTasks: complete });
+                await mongo.getDB().collection("todolists").findOneAndUpdate({ userId: userId }, { $set: { incompleteTasks: incomplete, completeTasks: complete } });
                 return message.channel.send(`Task \`${incompleteTask}\` successfully marked as incomplete!`)
             }
             return message.channel.send(`No task called ${taskToIncomplete} was found.`);
