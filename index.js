@@ -23,13 +23,7 @@ for (const file of commandFiles) {
 
 client.once('ready', async () => {
     client.user.setActivity("~help");
-    const dbConnection = await mongo.connectDB();
-    /*await mongo.connectDB().then(mongoose => {
-        try {
-        } finally {
-            mongoose.connection.close();
-        }
-    });*/
+    await mongo.connectDB();
 });
 
 client.on('message', message => {

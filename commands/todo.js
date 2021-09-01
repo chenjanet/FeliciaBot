@@ -105,7 +105,6 @@ module.exports = {
             });
             return;
         }
-        console.log(args);
         const command_name = args[0].split(/\s/)[0].toLowerCase();
 
         if (command_name != "add" && command_name != "complete" && command_name != "incomplete") {
@@ -114,7 +113,7 @@ module.exports = {
         } else if (command_name == "add") {
             let new_task = args.slice(1, args.length).join(" ");
             incomplete.push(new_task);
-            await mongo.getDB().collection("todolists").findOneAndUpdate({ userId: userId }, { incompleteTasks: incomplete, completeTasks: complete });
+            await mongo.getDB().collection("todolists").findOneAndUpdate({ "userId": userId }, { $set: { incompleteTasks: incomplete, completeTasks: complete } });
             return message.channel.send(`Task ${new_task} successfully added! Type \`~todo\` to view all current tasks.`);
 
         } else if (command_name == "complete") {
